@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name = "suite auto1test">
+	<test name = "Test SearchFunctionality">
+		<parameter name="browser" value = "Firefox"/>	
+			<classes>
+			
+				<class name = "auto1.searchfunctionalitytest.searchfunctionalitytest.SearchFunctionality"/>
+			
+			</classes>
+	
+	
+    </test>
+</suite>
