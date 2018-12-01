@@ -1,8 +1,7 @@
 package auto1.searchfunctionalitytest.searchfunctionalitytest.pages;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -16,15 +15,17 @@ public class AutoheroSearchPage extends BasePage{
 	WebDriver driver;
 	WebDriverWait wait;
 
-	By registration = By.cssSelector("#app > div > main > div.root___3C6lR.container > div > div.col-md-3 > div > div > div > div:nth-child(3) > div.label___3agdr > span");
-	By selectyear = By.name("yearRange.min");
-	By pricefilter = By.name("sort");
-	By specClass = By.className("specItem___2gMHn");
-	By priceClass = By.className("totalPrice___3yfNv");
+	By yearFilter = By.cssSelector("div[data-qa-selector='filter-year']");
+	By selectYear = By.name("yearRange.min");
+	By priceFilter = By.name("sort");
+	By specList = By.cssSelector("ul[data-qa-selector='spec-list']");
+	By spec = By.cssSelector("li[data-qa-selector='spec']");
+	By priceElement = By.cssSelector("div[data-qa-selector='price']");
 	
-	List<WebElement> els;
-	List<WebElement> prices;
-	String regex = "^(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$";
+	
+	List<WebElement> speclistElements;
+	List<WebElement> priceElements;
+	//String regex = "^(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$";
 	
 	
 	public AutoheroSearchPage(WebDriver driver) {
@@ -39,19 +40,43 @@ public class AutoheroSearchPage extends BasePage{
 	}
 	
 	public void getSortedCarsList(String regfilter, String sortfilter) {
-		clickElement(registration);
-		WaitUtils.waitLocatedElement(wait, selectyear);
-		selectOption(selectyear, regfilter);
-		WaitUtils.waitLocatedElement(wait, pricefilter);
-		selectOption(pricefilter, sortfilter);
+		clickElement(yearFilter);
+		WaitUtils.waitLocatedElement(wait, selectYear);
+		selectOption(selectYear, regfilter);
+		WaitUtils.waitLocatedElement(wait, priceFilter);
+		selectOption(priceFilter, sortfilter);
 	}
 	
-	public void retrievedElements() {
-		els = driver.findElements(specClass);
-		prices = driver.findElements(priceClass);
+	public int[] getRegistrationYears() {
+
+		speclistElements = driver.findElements(specList);
+		int[] registratioYears = new int[speclistElements.size()];
+		int i = 0;
+		for(WebElement specList : speclistElements) {
+			List <WebElement> specItems = specList.findElements(spec);
+			registratioYears[i] =  Integer.parseInt(specItems.get(0).getText().substring(5));
+			
+			System.out.println(registratioYears[i]);
+			i++;
+		}
+		return registratioYears;
+		
 	}
 	
-	public boolean verifyRegistrationDate() {
+	public int[] getCarsPrices() {
+		priceElements =  driver.findElements(priceElement);
+		int[] prices = new int[priceElements.size()] ;
+		int i = 0;
+		for (WebElement priceElement: priceElements) {
+			String text = priceElement.getText().substring(0, priceElement.getText().length() -2);
+			System.out.println(text);
+			prices[i]= Integer.parseInt(text.replace(".", ""));
+			i++;
+		}
+		return prices;
+	}
+	
+	/*public boolean verifyRegistrationDate() {
 		boolean success = true;
 		Pattern pattern = Pattern.compile(regex);
 		for (WebElement el: els) {
@@ -60,6 +85,8 @@ public class AutoheroSearchPage extends BasePage{
 			if (matcher.matches()) {
 			System.out.println(eltext);
 			int year = Integer.parseInt(eltext.substring(eltext.length() - 4, eltext.length()));
+			
+			int year = Integer.parseInt(registrationDate);
 			if (year<2015) {
 				success = false;
 				return success;
@@ -87,7 +114,7 @@ public class AutoheroSearchPage extends BasePage{
 		}
 		return success;
 	}
-	
+*/	
 
 }
 
