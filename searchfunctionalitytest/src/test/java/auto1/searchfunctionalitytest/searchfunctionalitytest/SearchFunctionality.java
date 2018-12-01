@@ -27,16 +27,16 @@ public class SearchFunctionality {
 	 }
 	 
 	 @Test
-	 public void registrationYearVerify() throws InterruptedException {
+	 public void verifyRegistrationYear() throws InterruptedException {
 		 
 		 searchPage.getSortedCarsList("2015", "Höchster Preis");
 		 Thread.sleep(2000);
 		 int [] registrationYears = searchPage.getRegistrationYears();
-		 assertTrue(registrationDateVerify(registrationYears));
+		 assertTrue(verifyRegistrationDate(registrationYears));
 	 }
 	 
-	 @Test(dependsOnMethods = {"registrationYearVerify"}, alwaysRun=true)
-	 public void descendingPriceVerify() {		 
+	 @Test(dependsOnMethods = {"verifyRegistrationYear"}, alwaysRun=true)
+	 public void verifyDescendingPrice() {		 
 		 int[] carPrices = searchPage.getCarsPrices();
 		assertTrue(priceSortVerify(carPrices));
 	 }
@@ -46,7 +46,7 @@ public class SearchFunctionality {
 		 driver.quit();
 	 }
 	 
-	 private boolean registrationDateVerify(int[] registrationYears) {
+	 private boolean verifyRegistrationDate(int[] registrationYears) {
 			boolean success = true;
 			for (int i = 0; i < registrationYears.length ; i++) {
 
